@@ -1,4 +1,4 @@
-# Open new iTerm and Terminal tabs from the command line
+# Open new iTerm, Terminal and Konsole tabs from the command line
 #
 # USAGE
 #
@@ -16,6 +16,14 @@
 #
 #   Justin Hileman (http://justinhileman.com)
 #
+
+function __tab_term_program
+  if [ "$TERM_PROGRAM" ]
+    echo $TERM_PROGRAM
+  else if [ "$KONSOLE_DBUS_SERVICE" -o "$KONSOLE_DBUS_SESSION" ]
+    echo Konsole
+  end
+end
 
 function tab -d 'Open the current directory (or any other directory) in a new tab'
   set -l cmd ''
@@ -35,13 +43,14 @@ function tab -d 'Open the current directory (or any other directory) in a new ta
     set cmd "; $argv"
   end
 
-  switch $TERM_PROGRAM
+  set -l term_program (__tab_term_program)
+
+  switch "$term_program"
 
   case 'iTerm.app'
+    set -l profile "Default Session"
     if set -q tab_iterm_profile
       set profile $tab_iterm_profile
-    else
-      set profile "Default Session"
     end
 
     osascript 2>/dev/null -e "
@@ -88,8 +97,11 @@ function tab -d 'Open the current directory (or any other directory) in a new ta
       end tell
     "
 
+  case 'Konsole'
+    konsole --new-tab -e "cd \"$cdto\"$cmd"
+
   case '*'
-    echo "Unknown terminal: $TERM_PROGRAM" >&2
+    echo "Unknown terminal: $term_program" >&2
     return 1
   end
 end

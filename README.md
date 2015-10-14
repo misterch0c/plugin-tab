@@ -9,7 +9,7 @@
 
 # tab
 
-Open new iTerm and Terminal tabs from the command line.
+Open new iTerm, Terminal and Konsole tabs from the command line.
 
 A super-rad plugin for [Oh My Fish][omf-link].
 
