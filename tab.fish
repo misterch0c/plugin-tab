@@ -20,8 +20,13 @@
 function __tab_term_program
   if [ "$TERM_PROGRAM" ]
     echo $TERM_PROGRAM
-  else if [ "$KONSOLE_DBUS_SERVICE" -o "$KONSOLE_DBUS_SESSION" ]
-    echo Konsole
+  else if [ "$KONSOLE_PROFILE_NAME" -o "$KONSOLE_DBUS_SERVICE" -o "$KONSOLE_DBUS_SESSION" -o "$KONSOLE_DBUS_WINDOW" ]
+    # TODO: detect other embedded Konsole applications to prevent false positives
+    if [ "$KATE_PID" ]
+      echo Kate
+    else
+      echo Konsole
+    end
   end
 end
 
